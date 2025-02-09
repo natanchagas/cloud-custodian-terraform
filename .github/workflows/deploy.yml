@@ -1,0 +1,74 @@
+name: "[Deploy] Cloud Custodian Terraform"
+
+on:
+  issues:
+    types:
+    - labeled
+
+env:
+  # verbosity setting for Terraform logs
+  TF_LOG: INFO
+  # Credentials for deployment to AWS
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+jobs:
+  terraform:
+    if: github.event.label.name == 'deploy'
+    name: "[Deploy] Cloud Custodian Terraform"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install AWS CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install awscli
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Create S3 Bucket
+        run: aws s3 mb s3://natanchagas-cloud-custodian-terraform --region us-east-1
+
+      - name: Setup Terraform with specified version on the runner
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7
+
+      - name: Checkout the repository to the runner
+        uses: actions/checkout@v4
+
+      - name: Terraform init
+        id: init
+        run: terraform init
+        working-directory: terraform
+
+      - name: Terraform format
+        id: fmt
+        run: terraform fmt -check
+        working-directory: terraform
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
+        working-directory: terraform
+
+      - name: Terraform plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+        working-directory: terraform
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve -input=false
+        working-directory: terraform
