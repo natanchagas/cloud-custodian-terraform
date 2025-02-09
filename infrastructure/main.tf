@@ -5,12 +5,12 @@ module "custodian_eventbridge_role" {
 
   role = {
     name         = "cloud-custodian-role"
-    trust_policy = templatefile("iam/role-templates/ec2-trust-policy.json", null)
+    trust_policy = templatefile("iam/trust-templates/scheduler-trust-policy.json", {})
   }
 
   policy = {
     name   = "cloud-custodian-policy"
-    policy = templatefile("iam/policy-templates/ec2-policy.json", null)
+    policy = templatefile("iam/policy-templates/scheduler-policy.json", {})
   }
 }
 
