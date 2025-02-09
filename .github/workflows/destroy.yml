@@ -47,28 +47,28 @@ jobs:
             - name: Terraform init
               id: init
               run: terraform init
-              working-directory: terraform
+              working-directory: infrastructure
 
             - name: Terraform format
               id: fmt
               run: terraform fmt -check
-              working-directory: terraform
+              working-directory: infrastructure
 
             - name: Terraform validate
               id: validate
               run: terraform validate
-              working-directory: terraform
+              working-directory: infrastructure
 
             - name: Terraform plan
               id: plan
               if: github.event_name == 'pull_request'
               run: terraform plan -no-color -input=false
               continue-on-error: true
-              working-directory: terraform
+              working-directory: infrastructure
 
             - name: Terraform destroy
               run: terraform destroy -auto-approve -input=false
-              working-directory: terraform
+              working-directory: infrastructure
 
             - name: Delete S3 Bucket
               run: aws s3 rb s3://natanchagas-cloud-custodian-terraform --region us-east-1 --force
