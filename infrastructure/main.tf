@@ -32,7 +32,7 @@ module "scheduler" {
   schedule_group_name = aws_scheduler_schedule_group.cloud_custodian_schedule_group.name
   schedule_role       = module.custodian_eventbridge_role.role_arn
 
-  kms_key_arn = module.kms.key_arn
+  kms_key_arn = module.kms.kms_alias
 
-  target_arn = module.sqs.queue_arn
+  target_arn = module.sqs.sqs_arn
 }

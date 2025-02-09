@@ -1,7 +1,3 @@
-output "role" {
-    value = aws_iam_role.role
-}
-
-output "policy" {
-    value = aws_iam_policy.policy
+output "role_arn" {
+    value = aws_iam_role.role.arn
 }
