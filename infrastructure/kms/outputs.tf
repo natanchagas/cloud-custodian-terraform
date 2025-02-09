@@ -1,3 +1,3 @@
-output "kms_alias" {
-    value = aws_kms_alias.cloud_custodian_key_alias.name
+output "kms_arn" {
+    value = aws_kms_key.cloud_custodian_key.arn
 }
