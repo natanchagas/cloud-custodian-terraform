@@ -14,7 +14,7 @@ env:
 
 jobs:
   terraform:
-    if: github.event.label.name == 'deploy'
+    if: github.event.label.name == 'deploy' && github.event.label.name != 'destroy'
     name: "[Deploy] Cloud Custodian Terraform"
     runs-on: ubuntu-latest
 

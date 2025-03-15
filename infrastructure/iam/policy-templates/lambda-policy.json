@@ -1,0 +1,22 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "lambda:InvokeFunction",
+          "lambda:StartFunction"
+        ],
+        "Resource": "arn:aws:lambda:us-east-1:886029877407:function:*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "schedule:TagResource"
+        ],
+        "Resource": [
+          "arn:aws:scheduler:us-east-1:886029877407:schedule/*"
+        ]
+      }
+    ]
+  }
